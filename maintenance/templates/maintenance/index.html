@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Bought{% endblock %}
+
+{% block content %}
+<div>
+    <div class="">
+        <h1 class="text-[20px] mb-6">නඩත්තු කිරීම සඳහා අවශ්ය භාණ්ඩ</h1>
+        
+        <ul class="font-sans flex flex-col space-y-2">
+            <li><a class="border px-2 rounded-lg border-black" href="{% url 'maintenance:add_item' %}">Add New Item</a></li>
+            <li><a class="border px-2 rounded-lg border-black" href="{% url 'home:index' %}">Home</a></li>
+        </ul>
+    </div>
+
+    <div class="container mx-auto mt-10">
+        <div class="overflow-x-auto">
+            {% for month, data in page_obj %}
+            <h2 class="text-2xl mb-4 mt-4">{{ month }} - Monthly Total: රු. {{ data.total_price }}</h2>
+            <table class="min-w-full">
+                <thead>
+                    <tr>
+                        <th class="py-4 px-10 text-left">දිනය</th>
+                        <th class="py-4 px-10 text-left">නම</th>
+                        <th class="py-4 px-10 text-left">ප්රමාණය</th>
+                        <th class="py-4 px-10 text-left">මිල</th>
+                        <th class="py-4 px-10 text-left">මිලදී ගත් ස්ථානය</th>
+                        <th class="py-4 px-10 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data.items %}
+                    <tr>
+                        <td class="py-4 px-10 border-b border-gray-200">{{ item.date|date:"M. d, Y" }}</td>
+                        <td class="py-4 px-10 border-b border-gray-200">{{ item.name }}</td>
+                        <td class="py-4 px-10 border-b border-gray-200">{{ item.quantity }}</td>
+                        <td class="py-4 px-10 border-b border-gray-200">රු. {{ item.price }}</td>
+                        <td class="py-4 px-10 border-b border-gray-200">{{ item.source }}</td>
+                        <td class="py-4 px-10 border-b border-gray-200">
+                            <a href="{% url 'maintenance:edit_item' item.id %}" class="px-2 py-1 border border-blue-500 rounded-lg text-blue-500">Edit</a>
+                            <a href="{% url 'maintenance:delete_item' item.id %}" class="px-2 py-1 border border-red-500 rounded-lg text-red-500 ml-2">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3 class="text-lg mt-4"></h3>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="mt-4">
+        <span class="mr-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        
+        <!-- Pagination Buttons -->
+        <div class="flex flex-wrap space-x-4 mt-4">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="px-2 py-1 border border-black rounded-lg">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-2 py-1 border border-black rounded-lg">Previous</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <span class="px-2 py-1 border border-black rounded-lg">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}" class="px-2 py-1 border border-black rounded-lg">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-2 py-1 border border-black rounded-lg">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="px-2 py-1 border border-black rounded-lg">Last</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Item{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Edit Item</h1>
+    <form method="post" class="space-y-4 mb-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="mx-4 border px-2 rounded-lg border-black" type="submit">Save changes</button>
+    </form>
+    <a class="mx-4 border px-2 rounded-lg border-black" href="{% url 'sold:index' %}">Cancel</a>
+
+</div>
+
+{% endblock %}
